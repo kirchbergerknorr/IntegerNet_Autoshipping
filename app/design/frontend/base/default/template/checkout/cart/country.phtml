@@ -1,11 +1,21 @@
 <?php /** @var $this IntegerNet_Autoshipping_Block_Country */ ?>
 
-<?php echo $this->__('Shipping cost to', $this->getShippingCostPageUrl()) ?>
-
-<?php echo $this->getCountryHtmlSelect($this->getSelectedCountryId(), 'country_id', 'autoshipping_country') ?>
+<div class="shippingCostDropDown">
+    <span class="shippingCostDropDownText">
+        <?php echo $this->__('Shipping cost to', $this->getShippingCostPageUrl()) ?>
+    </span>
+    <?php echo $this->getCountryHtmlSelect($this->getSelectedCountryId(), 'country_id', 'autoshipping_country') ?>
+</div>
+<div class="line"></div>
 
 <script type="text/javascript">
-    $('autoshipping_country').observe('change', function() {
+    // select box styling
+    jQuery(document).ready(function($){
+        $('select').selectbox();
+    });
+
+    // country selection
+    jQuery('#autoshipping_country').on('change', function() {
         window.location = '<?php echo $this->getUrl('autoshipping/country/select') ?>?country_id=' + $F('autoshipping_country');
-    })
+    });
 </script>

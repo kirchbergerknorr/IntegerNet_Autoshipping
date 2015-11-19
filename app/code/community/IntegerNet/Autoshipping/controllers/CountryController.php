@@ -14,6 +14,17 @@ class IntegerNet_Autoshipping_CountryController extends Mage_Core_Controller_Fro
     {
         $countryId = $this->getRequest()->getParam('country_id');
         Mage::getSingleton('core/session')->setAutoShippingCountry($countryId);
+
+        // kk start: save config over to checkout
+        $quote = Mage::getSingleton('checkout/session')->getQuote();
+        $shippingAddress = $quote->getShippingAddress();
+        $billingAddress = $quote->getBillingAddress();
+
+        $billingAddress->setCountryId($countryId)->save();
+        $shippingAddress->setCountryId($countryId)->save();
+        $quote->save();
+        //kk end
+
         $this->_redirectReferer();
     }
 }

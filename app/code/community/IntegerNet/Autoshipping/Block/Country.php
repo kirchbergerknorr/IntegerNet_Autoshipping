@@ -20,6 +20,7 @@ class IntegerNet_Autoshipping_Block_Country extends Mage_Directory_Block_Data
      */
     public function getSelectedCountryId()
     {
-        return Mage::getSingleton('checkout/session')->getQuote()->getShippingAddress()->getCountryId();
+        //return Mage::getSingleton('checkout/session')->getQuote()->getShippingAddress()->getCountryId();
+        return Mage::getSingleton('core/session')->getAutoShippingCountry();
     }
 }

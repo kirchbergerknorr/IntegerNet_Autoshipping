@@ -56,6 +56,13 @@
                     </autoshipping>
                 </observers>
             </core_block_abstract_to_html_before>
+            <sales_quote_collect_totals_before>
+                <observers>
+                    <onestepcheckout_set_address_defaults>
+                        <type>disabled</type>
+                    </onestepcheckout_set_address_defaults>
+                </observers>
+            </sales_quote_collect_totals_before>
         </events>
     </frontend>
 

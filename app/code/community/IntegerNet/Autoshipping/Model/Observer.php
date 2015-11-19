@@ -21,8 +21,24 @@ class IntegerNet_Autoshipping_Model_Observer
         if (! Mage::getStoreConfigFlag('autoshipping/settings/enabled')) {
             return;
         }
-        if (!($country = $this->_getCoreSession()->getAutoShippingCountry())) {
-            $country = Mage::getStoreConfig('autoshipping/settings/country_id');
+
+        if (!($country = $this->_getCoreSession()->getAutoShippingCountry()))
+        {
+            // kk start: set default shipping address as country
+            $customerSession = Mage::getSingleton('customer/session');
+            $customer = $customerSession->getCustomer();
+            $defaultAddress = $customer->getDefaultShippingAddress();
+
+            if($customerSession->isLoggedIn())
+            {
+                $country = is_object($defaultAddress) ? $defaultAddress->getCountry() : Mage::getStoreConfig('autoshipping/settings/country_id');
+            }
+            else
+            {
+                $country = Mage::getStoreConfig('autoshipping/settings/country_id');
+            }
+            //kk end
+
             $this->_getCoreSession()->setAutoShippingCountry($country);
         }
 
@@ -93,13 +109,13 @@ class IntegerNet_Autoshipping_Model_Observer
      */
     public function beforeBlockToHtml($observer)
     {
-        $block = $observer->getBlock();
-
         if (! Mage::getStoreConfigFlag('autoshipping/settings/show_country_selection_in_cart')) {
             return;
         }
 
-        if ($block instanceof Mage_Tax_Block_Checkout_Shipping) {
+        $block = $observer->getBlock();
+
+        if ($block instanceof Mage_Checkout_Block_Cart_Totals) {
 
             // show only on cart
             if (Mage::app()->getRequest()->getControllerName() != 'cart') {
@@ -111,10 +127,9 @@ class IntegerNet_Autoshipping_Model_Observer
                 return;
             }
 
-            // replace total title
-            $block->getTotal()->setTitle(
-                $block->getLayout()->createBlock('autoshipping/country', 'checkout_cart_country_select')->toHtml()
-            );
+            //kk start
+            echo $block->getLayout()->createBlock('autoshipping/country', 'checkout_cart_country_select')->toHtml();
+            //kk end
         }
     }
 
